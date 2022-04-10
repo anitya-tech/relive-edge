@@ -1,8 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 
-import { workdir } from "../config";
-import { getLogger } from "../plugins/log";
+import { workdir } from "../config.js";
+import { getLogger } from "../plugins/log.js";
 
 const logger = getLogger("rec.reset");
 

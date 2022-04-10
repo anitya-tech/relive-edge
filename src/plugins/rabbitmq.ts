@@ -1,9 +1,9 @@
 import { initRabbitmq } from "@gtr-infra/rabbitmq";
 import { onceAsync } from "@gtr/utils";
 
-import { instanceId } from "../config";
+import { instanceId } from "../config.js";
 
-import { getReliveEdgeSecret } from "./edge-secret";
+import { getReliveEdgeSecret } from "./edge-secret.js";
 
 const initMq = async () => {
   const secret = await getReliveEdgeSecret();

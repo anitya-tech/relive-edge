@@ -1,9 +1,9 @@
 import { initRedis, RedisStackBuilder } from "@gtr-infra/redis";
 import { onceAsync } from "@gtr/utils";
 
-import { instanceId } from "../config";
+import { instanceId } from "../config.js";
 
-import { getReliveEdgeSecret } from "./edge-secret";
+import { getReliveEdgeSecret } from "./edge-secret.js";
 
 export const getRedis = onceAsync(async () => {
   const secret = await getReliveEdgeSecret();

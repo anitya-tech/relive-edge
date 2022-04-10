@@ -1,12 +1,12 @@
 import { unixTs } from "@gtr/utils";
 
-import { instanceId } from "../config";
-import { getLogger } from "../plugins/log";
-import { getMq } from "../plugins/rabbitmq";
+import { instanceId } from "../config.js";
+import { getLogger } from "../plugins/log.js";
+import { getMq } from "../plugins/rabbitmq.js";
 
-import { getService } from "./bililive-rec";
-import { resetBililiveRec } from "./reset";
-import { watchRedisConfig } from "./sync-config";
+import { getService } from "./bililive-rec.js";
+import { resetBililiveRec } from "./reset.js";
+import { watchRedisConfig } from "./sync-config.js";
 
 const logger = getLogger("rec");
 

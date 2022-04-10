@@ -1,8 +1,8 @@
 import { Api } from "@bililive/rec-sdk";
-import { BililiveRecService } from "@bililive/rec-sdk/dist/service";
+import { BililiveRecService } from "@bililive/rec-sdk/dist/service.js";
 import { onceAsync } from "@gtr/utils";
 
-import { filenameTemplate, workdir } from "../config";
+import { filenameTemplate, workdir } from "../config.js";
 
 const initService = async () => {
   const service = await BililiveRecService.create({

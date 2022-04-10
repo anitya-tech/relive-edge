@@ -1,8 +1,7 @@
-import { BililiveRecService } from "@bililive/rec-sdk/dist/service";
-import { delay } from "@gtr/utils";
+import { BililiveRecService } from "@bililive/rec-sdk/dist/service.js";
 
-import { getLogger } from "../plugins/log";
-import { getRedis } from "../plugins/redis";
+import { getLogger } from "../plugins/log.js";
+import { getRedis } from "../plugins/redis.js";
 
 const logger = getLogger("rec.sync-config");
 

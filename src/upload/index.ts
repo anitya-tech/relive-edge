@@ -4,11 +4,11 @@ import path from "path";
 
 import { FileClosedData } from "@bililive/rec-sdk/dist/webhook/types";
 
-import { workdir } from "../config";
-import { getLogger } from "../plugins/log";
-import { getMq } from "../plugins/rabbitmq";
-import { getS3 } from "../plugins/s3";
-import { RecPath } from "../utils";
+import { workdir } from "../config.js";
+import { getLogger } from "../plugins/log.js";
+import { getMq } from "../plugins/rabbitmq.js";
+import { getS3 } from "../plugins/s3.js";
+import { RecPath } from "../utils.js";
 
 const logger = getLogger("upload");
 

@@ -1,7 +1,7 @@
 import { initMinio, S3Service } from "@gtr-infra/minio";
 import { onceAsync } from "@gtr/utils";
 
-import { getReliveEdgeSecret } from "./edge-secret";
+import { getReliveEdgeSecret } from "./edge-secret.js";
 
 const initS3 = async () => {
   const secret = await getReliveEdgeSecret();

@@ -1,7 +1,7 @@
 import { vault } from "@gtr/config";
 import { onceAsync } from "@gtr/utils";
 
-import { secretPath } from "../config";
+import { secretPath } from "../config.js";
 
 export interface ReliveEdgeSecret {
   remote: {

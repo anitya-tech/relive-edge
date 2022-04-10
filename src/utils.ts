@@ -15,10 +15,10 @@ export class RecPath {
     if (!result?.groups) throw `parse error: ${key}`;
     const g = result.groups;
     return new RecPath(
-      g.room_id,
-      g.date,
-      g.time,
-      g.extension,
+      g.room_id as string,
+      g.date as string,
+      g.time as string,
+      g.extension as string,
       g.encode_state as "raw" | "encoded"
     );
   }
@@ -29,7 +29,13 @@ export class RecPath {
     );
     if (!result?.groups) throw `parse error: ${key}`;
     const g = result.groups;
-    return new RecPath(g.room_id, g.date, g.time, g.extension, "raw");
+    return new RecPath(
+      g.room_id as string,
+      g.date as string,
+      g.time as string,
+      g.extension as string,
+      "raw"
+    );
   }
   static fromRecFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
@@ -38,7 +44,13 @@ export class RecPath {
     );
     if (!result?.groups) throw `parse error: ${key}`;
     const g = result.groups;
-    return new RecPath(g.room_id, g.date, g.time, g.extension, "raw");
+    return new RecPath(
+      g.room_id as string,
+      g.date as string,
+      g.time as string,
+      g.extension as string,
+      "raw"
+    );
   }
   toObjectKey(extension = this.extension, encode_state = this.encode_state) {
     if (!encode_state) throw "encode_state not defined";

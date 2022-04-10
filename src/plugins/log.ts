@@ -1,7 +1,7 @@
 import { env } from "@gtr/utils";
-import { configure, getLogger } from "log4js";
+import log4js from "log4js";
 
-configure({
+log4js.configure({
   appenders: {
     console: { type: "console" },
   },
@@ -10,4 +10,4 @@ configure({
   },
 });
 
-export { getLogger };
+export const getLogger = log4js.getLogger;

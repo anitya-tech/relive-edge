@@ -1,8 +1,8 @@
 import "dotenv/config";
 
-import { getLogger } from "./plugins/log";
-import { startRec } from "./rec";
-import { startUpload } from "./upload";
+import { getLogger } from "./plugins/log.js";
+import { startRec } from "./rec/index.js";
+import { startUpload } from "./upload/index.js";
 
 const logger = getLogger("entry");
 
@@ -23,7 +23,7 @@ if (unknownServices.length) {
 
 logger.info("start services:", services);
 
-Promise.all(services.map((i) => serviceMap[i]()))
+Promise.all(services.map((i) => serviceMap[i]?.()))
   .then(() => {
     logger.info("success started");
   })
