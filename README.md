@@ -8,8 +8,11 @@ npm i -g @anitya-tech/relive-edge
 ## Record Mode
 
 ```bash
-relive-edge rec init [-d context directory]
-relive-edge rec start [-d context directory]
+INSTANCE_ID=develop
+RELIVE_EDGE_WORKDIR=/path/to/stream-store
+BL_REC_PATH=/path/to/BililiveRecorder.Cli
+
+relive-edge rec
 ```
 
 ## Encorder Mode

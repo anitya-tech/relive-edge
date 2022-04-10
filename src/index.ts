@@ -1,33 +1,26 @@
 import "dotenv/config";
 
 import { getLogger } from "./plugins/log.js";
-import { startRec } from "./rec/index.js";
-import { startUpload } from "./upload/index.js";
+import { program } from "commander";
+import { parseMeta } from "@gtr/utils";
+import path from "path";
+import { readFile } from "fs/promises";
 
 const logger = getLogger("entry");
 
-const services = Array.from(
-  new Set(process.argv.slice(2).map((i) => i.toLocaleLowerCase()))
-);
+const start = async () => {
+  const { __dirname } = parseMeta(import.meta);
+  const pkg = JSON.parse(
+    await readFile(path.resolve(__dirname, "../package.json"), "utf-8")
+  );
 
-const serviceMap: Record<string, () => Promise<unknown>> = {
-  rec: startRec,
-  upload: startUpload,
+  program.version(pkg.version).description("无常录播，为您服务");
+
+  await import("./commands/rec.js").then((i) => i.setCommand(program, logger));
+
+  program.parse(process.argv);
+
+  if (!process.argv.slice(2).length) program.help();
 };
 
-const unknownServices = services.filter((i) => !serviceMap[i]);
-if (unknownServices.length) {
-  logger.error("unknown services:", unknownServices);
-  process.exit(1);
-}
-
-logger.info("start services:", services);
-
-Promise.all(services.map((i) => serviceMap[i]?.()))
-  .then(() => {
-    logger.info("success started");
-  })
-  .catch((e) => {
-    logger.error("failed to start:", e);
-    process.exit(0);
-  });
+start();
