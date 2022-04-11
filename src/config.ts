@@ -5,12 +5,9 @@ import path from "path";
 
 import { env } from "@gtr/utils";
 
-const getDefaultWorkdir = () => {
-  const dir = path.join(os.homedir(), "relive-edge");
-  mkdirSync(dir);
-  return dir;
-};
-export const workdir = env("RELIVE_EDGE_WORKDIR") ?? getDefaultWorkdir();
+
+export const workdir = env("RELIVE_EDGE_WORKDIR") ?? path.join(os.homedir(), "relive-edge");
+mkdirSync(workdir, { recursive: true });
 
 export const filenameTemplate =
   '{{ roomId }}-{{ "now" | format_date: "yyyyMMdd-HHmmss" }}.flv';
