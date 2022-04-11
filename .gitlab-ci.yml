@@ -1,0 +1,21 @@
+image: registry.geektr.co/t/yumemi:builder
+
+stages:
+  - build
+
+before_script:
+  - eval `yumemi docker-ci login`
+
+image:
+  stage: build
+  variables:
+  script:
+    - yumemi docker-ci build
+  only:
+      changes:
+        - "Dockerfile"
+        - "package.json"
+        - "yarn.lock"
+        - "tsconfig.json"
+        - "src"
+        - "bin"
