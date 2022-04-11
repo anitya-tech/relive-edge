@@ -12,9 +12,10 @@ docker-image:
     - yumemi docker-ci build
   only:
     changes:
-      - "Dockerfile"
-      - "package.json"
-      - "yarn.lock"
-      - "tsconfig.json"
-      - "src"
-      - "bin"
+      - Dockerfile
+      - package.json
+      - yarn.lock
+      - tsconfig.json
+      - src/**/*
+      - bin/**/*
+      - .gitlab-ci.yml
