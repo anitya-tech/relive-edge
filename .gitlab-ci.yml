@@ -6,16 +6,15 @@ stages:
 before_script:
   - eval `yumemi docker-ci login`
 
-image:
+docker-image:
   stage: build
-  variables:
   script:
     - yumemi docker-ci build
   only:
-      changes:
-        - "Dockerfile"
-        - "package.json"
-        - "yarn.lock"
-        - "tsconfig.json"
-        - "src"
-        - "bin"
+    changes:
+      - "Dockerfile"
+      - "package.json"
+      - "yarn.lock"
+      - "tsconfig.json"
+      - "src"
+      - "bin"
