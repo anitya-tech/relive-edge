@@ -1,6 +1,6 @@
 import { Api } from "@bililive/rec-sdk";
 import { BililiveRecService } from "@bililive/rec-sdk/dist/service.js";
-import { onceAsync } from "@gtr/utils";
+import { cache } from "@gtr/utils";
 
 import { filenameTemplate, workdir } from "../config.js";
 
@@ -49,4 +49,4 @@ const initService = async () => {
   return service;
 };
 
-export const getService = onceAsync(initService);
+export const getService = cache(initService);

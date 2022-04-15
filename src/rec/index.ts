@@ -1,8 +1,8 @@
 import { unixTs } from "@gtr/utils";
 
 import { instanceId } from "../config.js";
-import { getLogger } from "../plugins/log.js";
-import { getMq } from "../plugins/rabbitmq.js";
+import { getDefaultMQ } from "../infra.js";
+import { getLogger } from "../log.js"
 
 import { getService } from "./bililive-rec.js";
 import { resetBililiveRec } from "./reset.js";
@@ -23,7 +23,7 @@ export const startRec = async () => {
   await watchRedisConfig(service);
 
   logger.info("init rabbitmq");
-  const { channel, exchange } = await getMq();
+  const { channel, exchange } = await getDefaultMQ();
 
   logger.info("init webhook listen, push events to rebbitmq");
   service.webhook?.on("all", async ({ EventType, EventData, EventTimestamp }) =>

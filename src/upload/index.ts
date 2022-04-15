@@ -5,16 +5,15 @@ import path from "path";
 import { FileClosedData } from "@bililive/rec-sdk/dist/webhook/types";
 
 import { workdir } from "../config.js";
-import { getLogger } from "../plugins/log.js";
-import { getMq } from "../plugins/rabbitmq.js";
-import { getS3 } from "../plugins/s3.js";
+import { getLogger } from "../log.js"
 import { RecPath } from "../utils.js";
+import { getDefaultMQ, getDefaultS3 } from "../infra.js";
 
 const logger = getLogger("upload");
 
 const upload = async (event: FileClosedData) => {
-  const { channel, exchange } = await getMq();
-  const [bucket, prefix] = await getS3();
+  const { channel, exchange } = await getDefaultMQ();
+  const [bucket, prefix] = await getDefaultS3();
 
   const recPath = RecPath.fromRecFile(event.RelativePath);
 
@@ -56,7 +55,7 @@ const upload = async (event: FileClosedData) => {
 
 export const startUpload = async () => {
   logger.info("init rabbitmq");
-  const { channel, queue } = await getMq();
+  const { channel, queue } = await getDefaultMQ();
 
   await channel.prefetch(2);
   await channel.consume(

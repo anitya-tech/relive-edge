@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { getLogger } from "./plugins/log.js";
+import { getLogger } from "./log.js";
 import { program } from "commander";
 import { parseMeta } from "@gtr/utils";
 import path from "path";
@@ -17,8 +17,9 @@ const start = async () => {
   program.version(pkg.version).description("无常录播，为您服务");
 
   await import("./commands/rec.js").then((i) => i.setCommand(program, logger));
+  await import("./commands/rc/index.js").then((i) => i.setCommand(program));
 
-  program.parse(process.argv);
+  program.parseAsync(process.argv);
 
   if (!process.argv.slice(2).length) program.help();
 };

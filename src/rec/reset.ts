@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 import { workdir } from "../config.js";
-import { getLogger } from "../plugins/log.js";
+import { getLogger } from "../log.js"
 
 const logger = getLogger("rec.reset");
 

@@ -1,7 +1,7 @@
 import { BililiveRecService } from "@bililive/rec-sdk/dist/service.js";
+import { getDefaultRedis } from "../infra.js";
 
-import { getLogger } from "../plugins/log.js";
-import { getRedis } from "../plugins/redis.js";
+import { getLogger } from "../log.js"
 
 const logger = getLogger("rec.sync-config");
 
@@ -9,7 +9,7 @@ export const watchRedisConfig = async ({
   bililiveRec: rec,
 }: BililiveRecService) => {
   logger.info("init");
-  const { cuttingDuration, roomIds } = await getRedis();
+  const { cuttingDuration, roomIds } = await getDefaultRedis();
 
   const updateCuttingDuration = async () => {
     logger.info("sync cuttingDuration");
