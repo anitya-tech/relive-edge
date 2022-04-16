@@ -29,7 +29,7 @@ const argRoomIds = [
     try {
       prev.push(utils.getRoomId(cur));
     } catch (e) {
-      console.error(`cant parse as name: ${cur}`);
+      console.error(`can't parse as name: ${cur}`);
       process.exit(1);
     }
     return prev;
@@ -65,7 +65,7 @@ export const setCommand = (program: Command) => {
 
       const data = rooms.map((i) => [
         i.recording ? chalk.green("▶️") : "⏸️",
-        i.shortId || i.roomId,
+        i.roomId + (i.shortId ? ` (${i.shortId})` : ""),
         i.name,
         i.title,
         i.areaNameParent,
