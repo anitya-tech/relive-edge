@@ -6,7 +6,7 @@ log4js.configure({
     console: { type: "console" },
   },
   categories: {
-    default: { appenders: ["console"], level: env("LOG_LEVEL") ?? "error" },
+    default: { appenders: ["console"], level: env.str("LOG_LEVEL", "ERROR") },
   },
 });
 

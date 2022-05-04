@@ -1,7 +1,7 @@
 import { BililiveRecService } from "@bililive/rec-sdk/dist/service.js";
 import { getDefaultRedis } from "../infra.js";
 
-import { getLogger } from "../log.js"
+import { getLogger } from "../log.js";
 
 const logger = getLogger("rec.sync-config");
 
@@ -56,12 +56,12 @@ export const watchRedisConfig = async ({
 
   await Promise.all([updateCuttingDuration(), updateRooms()]);
 
-  roomIds.watch((action) => {
+  roomIds.ctx.watch((action) => {
     if (action === "sadd" || action === "srem")
       updateRooms().catch((e) => logger.error(`updateRooms ${action}`, e));
   });
 
-  cuttingDuration.watch((action) => {
+  cuttingDuration.ctx.watch((action) => {
     if (action === "set" || action === "delete")
       updateCuttingDuration().catch((e) =>
         logger.error(`updateCuttingDuration ${action}`, e)

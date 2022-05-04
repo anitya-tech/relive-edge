@@ -5,14 +5,14 @@ import path from "path";
 import { FileClosedData } from "@bililive/rec-sdk/dist/webhook/types";
 
 import { workdir } from "../config.js";
-import { getLogger } from "../log.js"
+import { getLogger } from "../log.js";
 import { RecPath } from "../utils.js";
 import { getDefaultMQ, getDefaultS3 } from "../infra.js";
 
 const logger = getLogger("upload");
 
 const upload = async (event: FileClosedData) => {
-  const { channel, exchange } = await getDefaultMQ();
+  const { UploadExchange } = await getDefaultMQ();
   const [bucket, prefix] = await getDefaultS3();
 
   const recPath = RecPath.fromRecFile(event.RelativePath);
@@ -36,17 +36,14 @@ const upload = async (event: FileClosedData) => {
   };
   const [flv, xml] = await Promise.all([uploadFile("flv"), uploadFile("xml")]);
 
-  channel.publish(
-    exchange.UploadEvent,
+  UploadExchange.publish(
     "VIDEO_WITH_DANMAKU",
-    Buffer.from(
-      JSON.stringify({
-        event,
-        bucket,
-        video: flv.objKey,
-        xml: xml.objKey,
-      })
-    ),
+    {
+      event,
+      bucket,
+      video: flv.objKey,
+      xml: xml.objKey,
+    },
     { persistent: true }
   );
 
@@ -55,25 +52,21 @@ const upload = async (event: FileClosedData) => {
 
 export const startUpload = async () => {
   logger.info("init rabbitmq");
-  const { channel, queue } = await getDefaultMQ();
+  const { channel, ThisUploadQueue } = await getDefaultMQ();
 
   await channel.prefetch(2);
-  await channel.consume(
-    queue.ThisUpload,
+  await ThisUploadQueue.consume<FileClosedData>(
     async (msg) => {
-      if (!msg) return;
-
-      const event = JSON.parse(msg.content.toString()) as FileClosedData;
-
+      const event = msg.content;
       logger.info(
         `new upload task: [${event.Name}] ${event.Title} (${event.RelativePath})`
       );
 
       try {
         await upload(event);
-        channel.ack(msg);
+        msg.ack();
       } catch (e) {
-        channel.nack(msg, false, true);
+        msg.nack(false, true);
         logger.error("task failed");
       }
     },

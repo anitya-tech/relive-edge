@@ -90,9 +90,9 @@ export const setCommand = (program: Command) => {
     .argument(...argRoomIds)
     .action(async (_instanceId: Promise<string>, toAddRoomIds: number[]) => {
       const instanceId = await _instanceId;
-      const { redis, roomIds } = await initRedis(instanceId);
-      await roomIds.add(...toAddRoomIds.map((id) => id + ""));
-      redis.disconnect();
+      const { roomIds } = await initRedis(instanceId);
+      await roomIds.add(...toAddRoomIds);
+      roomIds.ctx.redis.disconnect();
     });
 
   rc.command("rm")
@@ -112,7 +112,7 @@ export const setCommand = (program: Command) => {
 
         const rec = await initBililiveRec(instanceId);
         const remoteRooms = await rec.listRooms();
-        const { redis, roomIds } = await initRedis(instanceId);
+        const { roomIds } = await initRedis(instanceId);
 
         for (const toDeleteRoomId of toDeleteRoomIds) {
           const logPrefix = `Room ${toDeleteRoomId}\t `;
@@ -126,7 +126,7 @@ export const setCommand = (program: Command) => {
             continue;
           }
 
-          await roomIds.delete(`${toDeleteRoomId}`);
+          await roomIds.delete(toDeleteRoomId);
           if (!toDeleteRoom.recording) {
             console.log(logPrefix + "removed");
             continue;
@@ -143,7 +143,7 @@ export const setCommand = (program: Command) => {
           );
         }
 
-        redis.disconnect();
+        roomIds.ctx.redis.disconnect();
       }
     );
 };

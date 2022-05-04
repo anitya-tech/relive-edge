@@ -1,6 +1,5 @@
 import { BililiveRec } from "@bililive/rec-sdk";
 import { initMinio, S3Service } from "@gtr-infra/minio";
-import { initRabbitmq } from "@gtr-infra/rabbitmq";
 import { Vault } from "@gtr/config";
 import { cache, cacheWrap } from "@gtr/utils";
 import { instanceId, vaultPrefix } from "./config.js";
@@ -20,58 +19,60 @@ export const getSecret = cacheWrap((id: string) =>
 
 // Redis
 export const initRedis = cacheWrap(async (id: string) => {
-  const { initRedis, RedisStackBuilder } = await import("@gtr-infra/redis");
-
+  const { EzRedis } = await import("@gtr-infra/redis");
+  const vault = await getVault();
   const secret = await getSecret(id);
-  const redis = await initRedis(secret.redis.credential);
-  const rsb = new RedisStackBuilder(redis, `edge:${id}`);
 
-  const config = rsb.mkChild("config");
+  const redis = EzRedis.fromSecret(vault.get(secret.redis.credential));
+  const config = (await redis).fork(`edge:${id}:config`);
+
   return {
     redis,
-    roomIds: config.set("room-ids"),
-    cuttingDuration: config.number("cutting-duration"),
+    roomIds: config.createNumberSet("room-ids"),
+    cuttingDuration: config.createNumber("cutting-duration"),
   };
 });
 export const getDefaultRedis = cache(() => initRedis(instanceId));
 
 // RabbitMQ
-const cachedInitRabbitmq = cacheWrap(initRabbitmq);
 export const initMQ = cacheWrap(async (id: string) => {
+  const { Rabbitmq } = await import("@gtr-infra/rabbitmq");
+  const vault = await getVault();
   const secret = await getSecret(id);
-  const rabbitmq = await cachedInitRabbitmq(secret.rabbitmq.credential);
 
-  const exchange = {
-    RecEvent: "rec-events",
-    UploadEvent: "edge-upload",
-  } as const;
-  const queueUploadPrefix = "edge-upload-tasks";
-  const queue = {
-    ThisUpload: `${queueUploadPrefix}.${id}`,
-    Transcode: "edge-transcode-tasks",
-  } as const;
-
+  const rabbitmq = await Rabbitmq.fromSecret(
+    vault.get(secret.rabbitmq.credential)
+  );
   const channel = await rabbitmq.createChannel();
 
-  await channel.assertExchange(exchange.RecEvent, "topic", { durable: true });
-  await channel.assertQueue(queue.ThisUpload, { durable: true });
-  await channel.bindQueue(
-    queue.ThisUpload,
-    exchange.RecEvent,
-    `${id}.FileClosed`
-  );
-
-  await channel.assertExchange(exchange.UploadEvent, "topic", {
+  const RecExchange = await channel.createExchange("rec-events", "topic", {
     durable: true,
   });
-  await channel.assertQueue(queue.Transcode, { durable: true });
-  await channel.bindQueue(
-    queue.Transcode,
-    exchange.UploadEvent,
-    "VIDEO_WITH_DANMAKU"
-  );
+  const UploadExchange = await channel.createExchange("rec-events", "topic", {
+    durable: true,
+  });
 
-  return { channel, exchange, queue };
+  const queueUploadPrefix = "edge-upload-tasks";
+  const ThisUploadQueue = await channel.createQueue(
+    `${queueUploadPrefix}.${id}`,
+    {
+      durable: true,
+    }
+  );
+  const TranscodeQueue = await channel.createQueue("edge-transcode-tasks", {
+    durable: true,
+  });
+
+  ThisUploadQueue.bind(RecExchange, `${id}.FileClosed`);
+  TranscodeQueue.bind(UploadExchange, "VIDEO_WITH_DANMAKU");
+
+  return {
+    channel,
+    RecExchange,
+    UploadExchange,
+    ThisUploadQueue,
+    TranscodeQueue,
+  };
 });
 export const getDefaultMQ = cache(() => initMQ(instanceId));
 

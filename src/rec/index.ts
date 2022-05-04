@@ -2,7 +2,7 @@ import { unixTs } from "@gtr/utils";
 
 import { instanceId } from "../config.js";
 import { getDefaultMQ } from "../infra.js";
-import { getLogger } from "../log.js"
+import { getLogger } from "../log.js";
 
 import { getService } from "./bililive-rec.js";
 import { resetBililiveRec } from "./reset.js";
@@ -23,19 +23,14 @@ export const startRec = async () => {
   await watchRedisConfig(service);
 
   logger.info("init rabbitmq");
-  const { channel, exchange } = await getDefaultMQ();
+  const { RecExchange } = await getDefaultMQ();
 
   logger.info("init webhook listen, push events to rebbitmq");
   service.webhook?.on("all", async ({ EventType, EventData, EventTimestamp }) =>
-    channel.publish(
-      exchange.RecEvent,
-      `${instanceId}.${EventType}`,
-      Buffer.from(JSON.stringify(EventData)),
-      {
-        timestamp: unixTs(EventTimestamp),
-        persistent: EventType === "FileClosed",
-      }
-    )
+    RecExchange.publish(`${instanceId}.${EventType}`, EventData, {
+      timestamp: unixTs(EventTimestamp),
+      persistent: EventType === "FileClosed",
+    })
   );
 
   return service;
