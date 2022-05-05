@@ -1,5 +1,6 @@
 params = ["instanceId"]
 
+// Rec
 exchange "RecEvent" {
   name = "rec-events"
 
@@ -25,6 +26,7 @@ queue "ThisUpload" {
   }
 }
 
+// Transcode
 queue "Transcode" {
   name = "edge-transcode-tasks"
 

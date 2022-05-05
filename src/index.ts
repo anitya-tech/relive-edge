@@ -17,6 +17,9 @@ const start = async () => {
   program.version(pkg.version).description("无常录播，为您服务");
 
   await import("./commands/rec.js").then((i) => i.setCommand(program, logger));
+  await import("./commands/transfer.js").then((i) =>
+    i.setCommand(program, logger)
+  );
   await import("./commands/rc/index.js").then((i) => i.setCommand(program));
 
   program.parseAsync(process.argv);

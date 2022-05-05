@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^2.0.0",
+    "@types/amqplib": "^0.8.2",
     "@types/express": "^4.17.13",
     "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
@@ -48,10 +49,12 @@
   },
   "dependencies": {
     "@bililive/rec-sdk": "^0.0.6",
+    "@gtr-infra/bdpcs": "^0.0.5",
     "@gtr-infra/minio": "^1.0.2",
     "@gtr-infra/rabbitmq": "^1.0.6",
     "@gtr-infra/redis": "^1.0.5",
     "@gtr/config": "^1.2.4",
+    "@gtr/relive-db": "^0.0.3",
     "@gtr/utils": "^0.1.18",
     "chalk": "^5.0.1",
     "commander": "^9.1.0",
@@ -60,6 +63,7 @@
     "eventemitter3": "^4.0.7",
     "express": "^4.17.3",
     "log4js": "^6.4.4",
+    "mongoose": "^6.3.2",
     "portfinder": "^1.0.28",
     "table": "^6.8.0"
   }
