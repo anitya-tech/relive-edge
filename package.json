@@ -14,6 +14,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
+    "test": "ava",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:lint": "eslint src --ext .ts --fix",
@@ -26,6 +27,17 @@
   },
   "engines": {
     "node": ">=14.16"
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm"
+    ]
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^2.0.0",
@@ -56,6 +68,7 @@
     "@gtr/config": "^1.2.4",
     "@gtr/relive-db": "^0.0.3",
     "@gtr/utils": "^0.1.18",
+    "ava": "^4.2.0",
     "chalk": "^5.0.1",
     "commander": "^9.1.0",
     "dayjs": "^1.11.0",

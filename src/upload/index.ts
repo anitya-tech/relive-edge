@@ -15,20 +15,35 @@ const upload = async (event: FileClosedData) => {
   const { UploadExchange } = await getDefaultMQ();
   const [bucket, prefix] = await getDefaultS3();
 
-  const recPath = RecPath.fromRecFile(event.RelativePath);
+  let recPath: RecPath;
+  try {
+    recPath = RecPath.fromRecFile(event.RelativePath);
+  } catch (e) {
+    logger.warn("found issue path:", event.RelativePath);
+    try {
+      recPath = RecPath.fromFallbackRecFile(event.RelativePath);
+    } catch (e) {
+      logger.error("unknown path:", event.RelativePath);
+      throw Error("unknown path");
+    }
+  }
 
   const uploadFile = async (ext: string) => {
     const objKey = path.posix.join(prefix, recPath.toObjectKey(ext));
-    const filePath = path.join(workdir, recPath.toRecFile(ext));
+    const filePath = path.join(workdir, event.RelativePath);
 
     const obj = bucket.mkObject(objKey);
     await obj.putObject({ Body: createReadStream(filePath) });
 
-    const remoteSize = (await obj.headObject({})).ContentLength;
-    const localSize = (await fs.stat(filePath)).size;
+    // TODO: hash check
+    const [remoteSize, localSize] = await Promise.all([
+      obj.headObject({}).then((i) => i.ContentLength),
+      fs.stat(filePath).then((i) => i.size),
+    ]);
+
     if (remoteSize !== localSize) {
       logger.error(
-        `file size not match object size: ${event.RelativePath}(${localSize}) => (${remoteSize})`
+        `file size not match object size: ${filePath}(${localSize}) => (${remoteSize})`
       );
       throw "file size not match";
     }

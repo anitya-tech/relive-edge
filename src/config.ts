@@ -12,7 +12,7 @@ export const workdir = env.str(
 mkdirSync(workdir, { recursive: true });
 
 export const filenameTemplate =
-  '{{ roomId }}-{{ "now" | format_date: "yyyyMMdd-HHmmss" }}.flv';
+  '{{ roomId }}-{{ "now" | time_zone: "Asia/Shanghai" | format_date: "yyyyMMdd-HHmmss-fff" }}.flv';
 
 export const instanceId = env.str("INSTANCE_ID", "develop");
 export const vaultPrefix = "projects/relive/edge";
