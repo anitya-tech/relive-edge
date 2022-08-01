@@ -20,7 +20,7 @@ export interface StorageHelper {
 }
 
 export class MinioHelper implements StorageHelper {
-  constructor(public bucket: EzBucket) {}
+  constructor(public bucket: EzBucket) { }
   async size(key: string) {
     const meta = await this.bucket.mkObject(key).headObject({});
     return meta.ContentLength as number;
@@ -40,7 +40,7 @@ export class MinioHelper implements StorageHelper {
 }
 
 export class BDPcsHelper implements StorageHelper {
-  constructor(public bdpcs: BDPcs, public prefix: string) {}
+  constructor(public bdpcs: BDPcs, public prefix: string) { }
   private resolveKey = (key: string) => path.posix.join("/", this.prefix, key);
   async size(key: string) {
     const _key = this.resolveKey(key);
@@ -85,7 +85,7 @@ export const resolveStorage = cacheWrap(
       const bucketName = record.config.get("bucket");
       if (typeof bucketName !== "string" || bucketName.length === 0)
         throw "minio storage policy requires `bucket`";
-      const minio = new S3Service(initMinio(record.secret));
+      const minio = new S3Service(initMinio(vault, record.secret));
       const bucket = minio.mkBucket(bucketName);
       const helper = new MinioHelper(bucket);
       return { ...resultBase, type: "minio", helper, instance: bucket };

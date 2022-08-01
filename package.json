@@ -60,7 +60,7 @@
     "relive-edge": "bin/index.js"
   },
   "dependencies": {
-    "@bililive/rec-sdk": "^0.0.6",
+    "@bililive/rec-sdk": "^2.1.1-alpha.0",
     "@gtr-infra/bdpcs": "^0.0.5",
     "@gtr-infra/minio": "^1.0.2",
     "@gtr-infra/rabbitmq": "^1.0.6",

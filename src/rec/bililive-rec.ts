@@ -6,6 +6,7 @@ import { filenameTemplate, workdir } from "../config.js";
 
 const initService = async () => {
   const service = await BililiveRecService.create({
+    portable: true,
     workdir,
     webhook: true,
     extArgs: ["--flog", "Fatal"],
@@ -42,7 +43,7 @@ const initService = async () => {
     },
     optionalRecordingQuality: {
       hasValue: true,
-      value: "20000,10000,401,400,250,150,80",
+      value: "10000,20000,30000,401,400,250,150,80",
     },
   });
 

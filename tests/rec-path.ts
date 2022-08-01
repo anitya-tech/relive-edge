@@ -69,7 +69,7 @@ test.serial("rec-path.from-recfile", (t) => {
   };
   t.deepEqual(...pure(meta2, path2));
 
-  const path3 = RecPath.fromOriginRecFile(
+  const path3 = RecPath.fromFallbackRecFile(
     "14846654-小司无常/录制-14846654-20220430-060237-843-【？】早五点的101！ 友情局！.flv"
   );
   const meta3 = {

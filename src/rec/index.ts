@@ -5,15 +5,11 @@ import { getDefaultMQ } from "../infra.js";
 import { getLogger } from "../log.js";
 
 import { getService } from "./bililive-rec.js";
-import { resetBililiveRec } from "./reset.js";
 import { watchRedisConfig } from "./sync-config.js";
 
 const logger = getLogger("rec");
 
 export const startRec = async () => {
-  logger.info("remove old bililiveRec config file:");
-  await resetBililiveRec();
-
   logger.info("init new bililiveRec process and set default config:");
   const service = await getService();
 
