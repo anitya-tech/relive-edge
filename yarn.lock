@@ -935,10 +935,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@gtr-infra/bdpcs@^0.0.5":
-  version "0.0.5"
-  resolved "https://npm.geektr.co/@gtr-infra%2fbdpcs/-/bdpcs-0.0.5.tgz#ff38759fa875977fab564ad0bfba18727f290a19"
-  integrity sha512-v7cm7sE717KomAeeVJhpJFcboJTT+iFMNe9JFPMzuWQ/y7QpzrpoafjbzSeggNKatG/Idp0V1nhhk0VJoxpw5A==
+"@gtr-infra/bdpcs@^0.0.7":
+  version "0.0.7"
+  resolved "https://npm.geektr.co/@gtr-infra%2fbdpcs/-/bdpcs-0.0.7.tgz#314a1f448c8a1619ad94798312d768a4a80c7bf7"
+  integrity sha512-k5Utz673N+U1IopbcOMHZWxbiUttl1+BVdAOt/knCylHLo5HIj8W0hvbdeP7IYjLuZ2Lkv4ty7TNalNqDDbS5g==
   dependencies:
     "@gtr/config" "^1.2.4"
     "@gtr/utils" "^0.1.18"

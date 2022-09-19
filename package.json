@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@bililive/rec-sdk": "^2.1.1-alpha.0",
-    "@gtr-infra/bdpcs": "^0.0.5",
+    "@gtr-infra/bdpcs": "^0.0.7",
     "@gtr-infra/minio": "^1.0.2",
     "@gtr-infra/rabbitmq": "^1.0.6",
     "@gtr-infra/redis": "^1.0.5",

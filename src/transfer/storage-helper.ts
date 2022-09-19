@@ -1,11 +1,13 @@
 import "dotenv/config";
+import { createReadStream } from "fs";
+import path from "path";
+import { Readable } from "stream";
+
 import { BDFileMeta, BDPcs } from "@gtr-infra/bdpcs";
 import { BDUser } from "@gtr-infra/bdpcs/dist/config";
 import { EzBucket, initMinio, S3Service } from "@gtr-infra/minio";
 import { cacheWrap, env } from "@gtr/utils";
-import { createReadStream } from "fs";
-import path from "path";
-import { Readable } from "stream";
+
 import { initInfra } from "./infra.js";
 
 // TODO: writeTo
@@ -13,6 +15,7 @@ export interface StorageHelper {
   size(key: string): Promise<number>;
   read(key: string): Promise<{
     stream: Readable;
+    size?: () => Promise<number>;
     clean?: () => Promise<unknown>;
     remove?: () => Promise<unknown>;
   }>;
@@ -27,10 +30,17 @@ export class MinioHelper implements StorageHelper {
   }
   async read(key: string) {
     const obj = this.bucket.mkObject(key);
-    const { Body } = await obj.getObject({});
+    const { Body, ContentLength } = await obj.getObject({});
     const stream: Readable = Body;
     const remove = async () => obj.deleteObject({});
-    return { stream, remove };
+    return {
+      stream,
+      remove,
+      size:
+        ContentLength === undefined
+          ? undefined
+          : () => Promise.resolve(ContentLength),
+    };
   }
   async write(key: string, file: Readable) {
     const obj = this.bucket.mkObject(key);
@@ -50,8 +60,9 @@ export class BDPcsHelper implements StorageHelper {
   async read(key: string) {
     const _key = this.resolveKey(key);
     const stream = await this.bdpcs.getStream(_key);
+    const size = () => this.bdpcs.meta<BDFileMeta>(_key).then((m) => m.size);
     const remove = () => this.bdpcs.delete(_key);
-    return { stream, remove };
+    return { stream, remove, size };
   }
   async write(key: string, file: Readable) {
     const _key = this.resolveKey(key);

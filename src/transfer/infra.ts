@@ -18,8 +18,9 @@ interface MongoSecret {
   username: string;
 }
 
-interface TransferRequest {
+export interface TransferRequest {
   fileId: string;
+  size: number;
   from: {
     policy: string;
     key: string;

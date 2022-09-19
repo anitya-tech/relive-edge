@@ -26,3 +26,18 @@ relive-edge encode -f <filters>
 ```bash
 relive-edge fix <file> [...<files>]
 ```
+
+## Transfer
+
+
+```bash
+relive-edge transfer
+```
+
+create ramfs drive
+
+```bash
+sudo mount -t ramfs ramfs /mnt/bdpcs
+sudo chown "$UID:$UID" /mnt/bdpcs
+sudo chmod go-rwx /mnt/bdpcs
+```
