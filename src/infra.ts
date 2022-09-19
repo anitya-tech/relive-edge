@@ -80,7 +80,7 @@ export const getDefaultMQ = cache(() => initMQ(instanceId));
 // S3
 export const initS3 = cacheWrap(async (id: string) => {
   const secret = await getSecret(id);
-  const s3 = new S3Service(initMinio(secret.remote.credential));
+  const s3 = new S3Service(initMinio(await getVault(), secret.remote.credential));
   const bucket = s3.mkBucket(secret.remote.bucket);
   const prefix = secret.remote.prefix;
   return [bucket, prefix, s3] as const;
