@@ -1,6 +1,6 @@
 import { BililiveRecService } from "@bililive/rec-sdk/dist/service.js";
-import { getDefaultRedis } from "../infra.js";
 
+import { getDefaultRedis } from "../infra.js";
 import { getLogger } from "../log.js";
 
 const logger = getLogger("rec.sync-config");

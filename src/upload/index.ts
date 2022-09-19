@@ -5,9 +5,9 @@ import path from "path";
 import { FileClosedData } from "@bililive/rec-sdk/dist/webhook/types";
 
 import { workdir } from "../config.js";
+import { getDefaultMQ, getDefaultS3 } from "../infra.js";
 import { getLogger } from "../log.js";
 import { RecPath } from "../utils.js";
-import { getDefaultMQ, getDefaultS3 } from "../infra.js";
 
 const logger = getLogger("upload");
 

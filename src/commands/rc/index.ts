@@ -1,13 +1,14 @@
-import { Command } from "commander";
+import { utils } from "@bililive/rec-sdk";
 import chalk from "chalk";
+import { Command } from "commander";
 import { getBorderCharacters, table } from "table";
+
 import {
   getInstanceIds,
   getSecret,
   initBililiveRec,
   initRedis,
 } from "../../infra.js";
-import { utils } from "@bililive/rec-sdk";
 
 const argInstanceId = [
   "<instance-id>",

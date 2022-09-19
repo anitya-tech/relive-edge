@@ -2,6 +2,7 @@ import { BililiveRec } from "@bililive/rec-sdk";
 import { initMinio, S3Service } from "@gtr-infra/minio";
 import { Vault } from "@gtr/config";
 import { cache, cacheWrap } from "@gtr/utils";
+
 import { instanceId, vaultPrefix } from "./config.js";
 
 // Vault

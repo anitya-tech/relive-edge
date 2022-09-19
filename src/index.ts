@@ -1,10 +1,12 @@
 import "dotenv/config";
 
-import { getLogger } from "./log.js";
-import { program } from "commander";
-import { parseMeta } from "@gtr/utils";
-import path from "path";
 import { readFile } from "fs/promises";
+import path from "path";
+
+import { parseMeta } from "@gtr/utils";
+import { program } from "commander";
+
+import { getLogger } from "./log.js";
 
 const logger = getLogger("entry");
 
