@@ -5,7 +5,7 @@ import { Readable } from "stream";
 
 import { BDFileMeta, BDPcs } from "@gtr-infra/bdpcs";
 import { BDUser } from "@gtr-infra/bdpcs/dist/config";
-import { EzBucket, initMinio, S3Service } from "@gtr-infra/minio";
+import { EzBucket, initMinio, S3Service } from "@gtr-infra/s3";
 import { cacheWrap, env } from "@gtr/utils";
 
 import { initInfra } from "./infra.js";
@@ -19,11 +19,11 @@ export interface StorageHelper {
     clean?: () => Promise<unknown>;
     remove?: () => Promise<unknown>;
   }>;
-  write(key: string, file: Readable): Promise<unknown>;
+  write(key: string, file: Readable, size: number): Promise<unknown>;
 }
 
 export class MinioHelper implements StorageHelper {
-  constructor(public bucket: EzBucket) { }
+  constructor(public bucket: EzBucket) {}
   async size(key: string) {
     const meta = await this.bucket.mkObject(key).headObject({});
     return meta.ContentLength as number;
@@ -42,15 +42,15 @@ export class MinioHelper implements StorageHelper {
           : () => Promise.resolve(ContentLength),
     };
   }
-  async write(key: string, file: Readable) {
+  async write(key: string, file: Readable, size: number) {
     const obj = this.bucket.mkObject(key);
     if (typeof file === "string") file = createReadStream(file);
-    await obj.putObject({ Body: file });
+    await obj.putObject({ Body: file, ContentLength: size });
   }
 }
 
 export class BDPcsHelper implements StorageHelper {
-  constructor(public bdpcs: BDPcs, public prefix: string) { }
+  constructor(public bdpcs: BDPcs, public prefix: string) {}
   private resolveKey = (key: string) => path.posix.join("/", this.prefix, key);
   async size(key: string) {
     const _key = this.resolveKey(key);

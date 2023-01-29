@@ -8,7 +8,12 @@ import { resolveStorage } from "./storage-helper.js";
 
 const logger = getLogger("transfer");
 
-export const listenTransferTasks = async () => {
+export interface TransferOptions {
+  lightLoadParallel: number;
+  heavyLoadParallel: number;
+}
+
+export const listenTransferTasks = async (opts: TransferOptions) => {
   const { db, TransferQueue } = await initInfra();
 
   let prevNamePair = "";
@@ -29,7 +34,7 @@ export const listenTransferTasks = async () => {
     const obj = await from.helper.read(req.from.key);
 
     try {
-      await to.helper.write(req.to.key, obj.stream);
+      await to.helper.write(req.to.key, obj.stream, msg.content.size);
       await db.StorageFile.findByIdAndUpdate(req.fileId, {
         $set: {
           storagePolicy: req.to.policy,
@@ -47,8 +52,16 @@ export const listenTransferTasks = async () => {
     }
   };
 
-  let lightLoadParallel = 16;
-  let heavyLoadParallel = 4;
+  let lightLoadParallel = opts.lightLoadParallel;
+  let heavyLoadParallel = opts.heavyLoadParallel;
+
+  const lastTaskCheck = () => {
+    if (lightLoadParallel === opts.lightLoadParallel && heavyLoadParallel === opts.heavyLoadParallel) {
+      setTimeout(thread, 1000);
+      return
+    }
+    thread();
+  }
 
   const thread = async () => {
     if (heavyLoadParallel <= 0 || lightLoadParallel <= 0) return;
@@ -66,7 +79,7 @@ export const listenTransferTasks = async () => {
         .catch((e) => logger.error(e))
         .finally(() => {
           lightLoadParallel += 1;
-          thread();
+          lastTaskCheck();
         });
       thread();
     }
@@ -79,7 +92,7 @@ export const listenTransferTasks = async () => {
         .catch((e) => logger.error(e))
         .finally(() => {
           heavyLoadParallel += 1;
-          thread();
+          lastTaskCheck();
         });
       thread();
     }
