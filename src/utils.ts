@@ -24,6 +24,8 @@ export class RecPath {
     this.extension = opts.extension;
     this.encode_state = opts.encode_state;
   }
+  // /stream/raw/17151/20101024/012345.flv
+  // /stream/raw/17151/20101024/012345-389.flv
   static fromObjectKey(key: string) {
     const result = key.match(
       /stream\/(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>\w+)/
@@ -31,6 +33,8 @@ export class RecPath {
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath(result.groups as unknown as RecPathOptions);
   }
+  // /raw/17151/20101024/012345-389.flv
+  // /raw/17151/20101024/012345.flv
   static fromStoreFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
@@ -39,10 +43,11 @@ export class RecPath {
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath(result.groups as unknown as RecPathOptions);
   }
+  // /17151-GeekTR/录制-17151-20101024-012345-389-随便打打游戏.flv
   static fromFallbackRecFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
-      /(?<room_id>\d+)-(.+?)\/录制-(\d+)-(?<date>\d{8})-(?<time>\d{6})-(?<ms>\d{3})?-(.+?)\.(?<extension>\w+)/
+      /(?<room_id>\d+)-(.+?)\/录制-(\d+)-(?<date>\d{8})-(?<time>\d{6})(-(?<ms>\d{3}))?-(.+?)\.(?<extension>\w+)/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath({
@@ -50,6 +55,8 @@ export class RecPath {
       encode_state: "raw",
     });
   }
+  // 17151-20101024-012345-389.flv
+  // 17151-20101024-012345.flv
   static fromRecFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
