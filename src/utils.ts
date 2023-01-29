@@ -1,5 +1,9 @@
 import path from "path";
 
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js"
+dayjs.extend(customParseFormat);
+
 export interface RecPathOptions {
   room_id: string;
   date: string;
@@ -86,5 +90,8 @@ export class RecPath {
   }
   toRecFile(extension = this.extension) {
     return `${this.room_id}-${this.date}-${this.time}-${this.ms}.${extension}`;
+  }
+  getDayjs() {
+    return dayjs(`${this.date}-${this.time}-${this.ms}`, "YYYYMMDD-hhmmss-SSS")
   }
 }
