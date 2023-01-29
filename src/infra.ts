@@ -1,5 +1,5 @@
 import { BililiveRec } from "@bililive/rec-sdk";
-import { initMinio, S3Service } from "@gtr-infra/minio";
+import { initMinio, S3Service } from "@gtr-infra/s3";
 import { Vault } from "@gtr/config";
 import { cache, cacheWrap } from "@gtr/utils";
 

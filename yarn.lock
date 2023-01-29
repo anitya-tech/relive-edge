@@ -947,13 +947,6 @@
     progress-stream "^2.0.0"
     xbytes "^1.7.0"
 
-"@gtr-infra/minio@^1.0.2":
-  version "1.0.3"
-  resolved "https://npm.geektr.co/@gtr-infra%2fminio/-/minio-1.0.3.tgz#006a8042b8acdbd97c3ac81a236a76cc71aa774d"
-  integrity sha512-stQTvqyOOJzwH8U8y+B0/9fFyvsbpuAIv2Nnr4l8Xg/vxIDsjFKe4O/3y1OfiCiSR0DlTVl1uQovaaMxhpn8sQ==
-  dependencies:
-    "@aws-sdk/client-s3" "^3.121.0"
-
 "@gtr-infra/rabbitmq@^1.0.6":
   version "1.0.6"
   resolved "https://npm.geektr.co/@gtr-infra%2frabbitmq/-/rabbitmq-1.0.6.tgz#92e4d968748ad0ccc5dfde9811b2cb6177354574"
@@ -970,6 +963,14 @@
     "@gtr/config" "^1.2.4"
     "@gtr/utils" "^0.1.4"
     ioredis "^5.0.4"
+
+"@gtr-infra/s3@^1.0.9":
+  version "1.0.9"
+  resolved "https://npm.geektr.co/@gtr-infra%2fs3/-/s3-1.0.9.tgz#054adffd75742f1deed00a1b032617f7b46782d9"
+  integrity sha512-XrpPQLjYNjRZujUbPjoV+M5hxD+q1lPC9gi4IO+UePWke5UdCENv8nvIiOzJ0sgYQvBA6/4gYxGsfcwtGSw9Xg==
+  dependencies:
+    "@aws-sdk/client-s3" "^3.121.0"
+    "@gtr/utils" "^0.1.21"
 
 "@gtr/config@^1.2.4":
   version "1.2.4"
@@ -992,7 +993,7 @@
     "@gtr/utils" "^0.1.18"
     mongoose "^6.3.1"
 
-"@gtr/utils@^0.1.10", "@gtr/utils@^0.1.18", "@gtr/utils@^0.1.3", "@gtr/utils@^0.1.4":
+"@gtr/utils@^0.1.10", "@gtr/utils@^0.1.18", "@gtr/utils@^0.1.21", "@gtr/utils@^0.1.3", "@gtr/utils@^0.1.4":
   version "0.1.21"
   resolved "https://npm.geektr.co/@gtr%2futils/-/utils-0.1.21.tgz#7e29969c88a4cf5d0179de912c7ad17d66de1386"
   integrity sha512-M4e7C74es78ogxx0xDQLn5Q5s1i+XRdT2RId4b+0d2Ff38/wwVXv5DQswjj+Ecf0WW6LnmNCaXuhrMGWwdbJsA==
