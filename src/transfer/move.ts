@@ -45,7 +45,7 @@ export const move = async (opts: MoveOptions) => {
     try {
       meta = RecPath.fromObjectKey(i.key);
       error = false;
-    } catch {}
+    } catch { }
     // try {
     //   meta = RecPath.fromFallbackRecFile(i.key);
     // } catch { }
@@ -62,11 +62,10 @@ export const move = async (opts: MoveOptions) => {
     const targetKey = meta.toObjectKey();
 
     if (opts.stopAt && meta.getDayjs().isAfter(opts.stopAt)) {
-      console.log(i.key);
       continue;
     }
     if (typeof opts.limit === "number" && taskSize + i.size > opts.limit)
-      continue;
+      break;
 
     taskSize += i.size;
     tasks.push({
@@ -84,9 +83,12 @@ export const move = async (opts: MoveOptions) => {
   }
 
   logger.info(
-    `task size: ${xbytes(taskSize)} / ${xbytes(
-      files.reduce((p, v) => p + v.size, 0)
+    `task size: ${xbytes(taskSize, { iec: true })} / ${xbytes(
+      files.reduce((p, v) => p + v.size, 0), { iec: true }
     )}`
+  );
+  logger.info(
+    `task number: ${tasks.length}`
   );
 
   if (!opts.testMode) {
