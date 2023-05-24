@@ -15,7 +15,7 @@ export interface MoveOptions {
   target: string;
   source: string;
   include: RegExp;
-  exclude: RegExp;
+  exclude?: RegExp;
   limit?: number;
   stopAt?: string | number | dayjs.Dayjs | Date;
   testMode: boolean;
@@ -28,9 +28,9 @@ export const move = async (opts: MoveOptions) => {
     $and: [
       { storagePolicy: new mongoose.Types.ObjectId(opts.source) },
       { key: { $regex: opts.include } },
-      { key: { $not: { $regex: opts.exclude } } },
     ],
   };
+  if (opts.exclude) query.$and?.push({ key: { $not: { $regex: opts.exclude } } })
 
   const files = await db.StorageFile.find(query);
   logger.info(`total files: ${files.length}`);
