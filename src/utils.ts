@@ -32,7 +32,7 @@ export class RecPath {
   // /stream/raw/17151/20101024/012345-389.flv
   static fromObjectKey(key: string) {
     const result = key.match(
-      /stream\/(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>\w+)/
+      /stream\/(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath(result.groups as unknown as RecPathOptions);
@@ -42,7 +42,7 @@ export class RecPath {
   static fromStoreFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
-      /(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>\w+)/
+      /(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath(result.groups as unknown as RecPathOptions);
@@ -51,7 +51,7 @@ export class RecPath {
   static fromFallbackRecFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
-      /(?<room_id>\d+)-(.+?)\/录制-(\d+)-(?<date>\d{8})-(?<time>\d{6})(-(?<ms>\d{3}))?-(.+?)\.(?<extension>\w+)/
+      /(?<room_id>\d+)-(.+?)\/录制-(\d+)-(?<date>\d{8})-(?<time>\d{6})(-(?<ms>\d{3}))?-(.+?)\.(?<extension>.+)$/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath({
@@ -64,7 +64,7 @@ export class RecPath {
   static fromRecFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
-      /(?<room_id>\d+)-(?<date>\d{8})-(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>\w+)/
+      /(?<room_id>\d+)-(?<date>\d{8})-(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath({
