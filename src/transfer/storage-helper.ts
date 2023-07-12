@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { createReadStream } from "fs";
+import { stat } from "fs/promises";
 import path from "path";
 import { Readable } from "stream";
 
@@ -23,7 +24,7 @@ export interface StorageHelper {
 }
 
 export class MinioHelper implements StorageHelper {
-  constructor(public bucket: EzBucket) {}
+  constructor(public bucket: EzBucket) { }
   async size(key: string) {
     const meta = await this.bucket.mkObject(key).headObject({});
     return meta.ContentLength as number;
@@ -50,19 +51,27 @@ export class MinioHelper implements StorageHelper {
 }
 
 export class BDPcsHelper implements StorageHelper {
-  constructor(public bdpcs: BDPcs, public prefix: string) {}
+  constructor(public bdpcs: BDPcs, public prefix: string) { }
   private resolveKey = (key: string) => path.posix.join("/", this.prefix, key);
   async size(key: string) {
     const _key = this.resolveKey(key);
     const meta = await this.bdpcs.meta<BDFileMeta>(_key);
     return meta.size;
   }
+  // async read(key: string) {
+  //   const _key = this.resolveKey(key);
+  //   const stream = await this.bdpcs.getStream(_key);
+  //   const size = () => this.bdpcs.meta<BDFileMeta>(_key).then((m) => m.size);
+  //   const remove = () => this.bdpcs.delete(_key);
+  //   return { stream, remove, size };
+  // }
   async read(key: string) {
     const _key = this.resolveKey(key);
-    const stream = await this.bdpcs.getStream(_key);
-    const size = () => this.bdpcs.meta<BDFileMeta>(_key).then((m) => m.size);
+    const [file, clean] = await this.bdpcs.download(_key);
+    const stream = createReadStream(file);
+    const size = () => stat(file).then((s) => s.size);
     const remove = () => this.bdpcs.delete(_key);
-    return { stream, remove, size };
+    return { stream, clean, remove, size }
   }
   async write(key: string, file: Readable) {
     const _key = this.resolveKey(key);
