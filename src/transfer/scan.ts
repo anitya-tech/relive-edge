@@ -57,7 +57,7 @@ export const scanMinio = async (opts: ScanOptions, { bucket }: MinioHelper) => {
       logger.info(`(${wrote}) new file: ${Raw.Key}`);
   }
 
-  logger.info("complete");
+  logger.info(`completed: ${scanned} scanned, ${wrote} wrote`);
 };
 
 export const scan = async (opts: ScanOptions) => {
