@@ -18,7 +18,7 @@ export interface MoveOptions {
   exclude?: RegExp;
   limit?: number;
   stopAt?: string | number | dayjs.Dayjs | Date;
-  testMode: boolean;
+  dryRun?: boolean;
 }
 
 export const move = async (opts: MoveOptions) => {
@@ -55,7 +55,7 @@ export const move = async (opts: MoveOptions) => {
 
     if (!meta) {
       logger.error(`unexpected key format: ${i.key}`);
-      if (opts.testMode) process.exit(1);
+      if (opts.dryRun) process.exit(1);
       continue;
     }
 
@@ -91,7 +91,7 @@ export const move = async (opts: MoveOptions) => {
     `task number: ${tasks.length}`
   );
 
-  if (!opts.testMode) {
+  if (!opts.dryRun) {
     for (const task of tasks)
       TransferRequestExchange.publish(`${opts.source}.${opts.target}`, task);
   }
