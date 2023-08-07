@@ -4,7 +4,7 @@ import xbytes from "xbytes";
 import { getLogger } from "../log.js";
 
 import { initInfra, TransferRequest } from "./infra.js";
-import { resolveStorage } from "./storage-helper.js";
+import { resolveStorage, StorageHelperReader } from "./storage-helper.js";
 
 const logger = getLogger("transfer");
 
@@ -31,7 +31,19 @@ export const listenTransferTasks = async (opts: TransferOptions) => {
     prevNamePair = curNamePair;
     logger.info(`${req.from.key} [${xbytes(msg.content.size)}]`);
 
-    const obj = await from.helper.read(req.from.key);
+    let obj: StorageHelperReader
+    try {
+      obj = await from.helper.read(req.from.key);
+    } catch (e: any) {
+      if (e?.Code === "NoSuchKey") {
+        logger.warn("transfer task failed: NoSuchKey", req.from.key)
+        msg.ack();
+        return
+      } else {
+        throw e
+      }
+    }
+
 
     try {
       await to.helper.write(req.to.key, obj.stream, msg.content.size);

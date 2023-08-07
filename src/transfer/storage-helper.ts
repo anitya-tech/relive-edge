@@ -12,14 +12,16 @@ import { cacheWrap, env } from "@gtr/utils";
 import { initInfra } from "./infra.js";
 
 // TODO: writeTo
+export interface StorageHelperReader {
+  stream: Readable;
+  size?: () => Promise<number>;
+  clean?: () => Promise<unknown>;
+  remove?: () => Promise<unknown>;
+}
+
 export interface StorageHelper {
   size(key: string): Promise<number>;
-  read(key: string): Promise<{
-    stream: Readable;
-    size?: () => Promise<number>;
-    clean?: () => Promise<unknown>;
-    remove?: () => Promise<unknown>;
-  }>;
+  read(key: string): Promise<StorageHelperReader>;
   write(key: string, file: Readable, size: number): Promise<unknown>;
 }
 
