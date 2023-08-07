@@ -12,7 +12,7 @@ export interface ScanOptions {
   prefix: string;
   include?: RegExp;
   exclude?: RegExp;
-  testMode: boolean;
+  dryRun: boolean;
 }
 
 export const scanMinio = async (opts: ScanOptions, { bucket }: MinioHelper) => {
@@ -50,7 +50,7 @@ export const scanMinio = async (opts: ScanOptions, { bucket }: MinioHelper) => {
       size: Raw.ContentLength,
       hash,
     });
-    if (!opts.testMode) await file.save();
+    if (!opts.dryRun) await file.save();
 
     wrote += 1;
     if (10 / wrote > Math.random())

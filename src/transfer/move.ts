@@ -75,10 +75,8 @@ export const move = async (opts: MoveOptions) => {
       to: { policy: opts.target, key: targetKey },
     });
 
-    if (tasks.length < 10) {
+    if (10 / tasks.length > Math.random()) {
       logger.info(`add task: ${i.key} => ${targetKey}`);
-    } else if (tasks.length === 10) {
-      logger.info(`add tasks: ...`);
     }
   }
 

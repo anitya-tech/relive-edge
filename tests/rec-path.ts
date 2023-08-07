@@ -44,6 +44,22 @@ test.serial("rec-path.object-key", (t) => {
     "stream/raw/8643223/20211227/232438-000.flv"
   );
   t.throws(() => path3.toObjectKey(), { message: "encode_state not defined" });
+
+  const key4 = "stream/encoded/21622680/20210409/030106.mp4.meta";
+  const key4result = "stream/encoded/21622680/20210409/030106-000.mp4.meta";
+  const meta4 = {
+    room_id: "21622680",
+    encode_state: "encoded",
+    date: "20210409",
+    time: "030106",
+    ms: "000",
+    extension: "mp4.meta",
+  };
+  const path4 = RecPath.fromObjectKey(key4);
+  t.deepEqual(...pure(meta4, path4));
+  t.is(path4.toObjectKey(), key4result);
+  t.log(path4);
+  t.log(path4.toObjectKey());
 });
 
 test.serial("rec-path.from-recfile", (t) => {

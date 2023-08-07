@@ -19,7 +19,7 @@ export class RecPath {
   public time: string;
   public ms: string;
   public extension: string;
-  public encode_state?: "raw" | "encoded";
+  public encode_state?: "raw" | "encoded" | "corrupted";
   constructor(opts: RecPathOptions) {
     this.room_id = opts.room_id;
     this.date = opts.date;
@@ -32,7 +32,7 @@ export class RecPath {
   // /stream/raw/17151/20101024/012345-389.flv
   static fromObjectKey(key: string) {
     const result = key.match(
-      /stream\/(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
+      /stream\/(?<encode_state>raw|encoded|corrupted)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath(result.groups as unknown as RecPathOptions);
@@ -42,7 +42,7 @@ export class RecPath {
   static fromStoreFile(filePath: string) {
     const key = filePath.split(path.sep).join("/");
     const result = key.match(
-      /(?<encode_state>raw|encoded)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
+      /(?<encode_state>raw|encoded|corrupted)\/(?<room_id>\d+)\/(?<date>\d{8})\/(?<time>\d{6})(-(?<ms>\d{3}))?\.(?<extension>.+)$/
     );
     if (!result?.groups) throw Error(`parse error: ${key}`);
     return new RecPath(result.groups as unknown as RecPathOptions);
